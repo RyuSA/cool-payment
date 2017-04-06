@@ -33,8 +33,8 @@ So I tried to create "minimized Pay-Change algorithm" below.
 ## Algorithm
 
 ### Mathematical description
-Let my_before_wallet be your wallet before your purchase.
-I want to find such int my_after_wallet that
-<img src="https://latex.codecogs.com/gif.latex?my_after_wallet = min{#(p) :my_before_wallet >= p and p <= price}"/>
+Let m be your wallet before your purchase.
+I want to find such int n that
+<img src="https://latex.codecogs.com/gif.latex?after\&space;wallet&space;=&space;min\{&space;\&hash;(p):&space;before\&space;wallet&space;\geq&space;p&space;\&space;and\&space;price&space;\geq&space;p&space;\}" title="after\ wallet = min\{ \#(p): before\ wallet \geq p \ and\ price \geq p \}" />
 
 > #(integer) means the number of coins/bills of integer
