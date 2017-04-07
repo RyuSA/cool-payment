@@ -1,4 +1,9 @@
 class Wallet:
+    """
+    init : Wallet([9 values])
+    - show_my_wallet
+        Show inside of your wallet
+    """
     coins = [1,5,10,50,100,500,1000,5000,10000]
     # my_before_wallet = [1yen , 5yen, ..., 1k-yen, 5k-yen, 10k-yen]
     # don't care 2k-yen bill
@@ -9,6 +14,13 @@ class Wallet:
 
         for one in range(len(self.coins)):
             self.inside[self.coins[one]] = my_before_wallet[one]
+
+    def is_payable(self,pay):
+        # if you cannot pay, return False : othewise True
+        for my , p in zip(self.inside.values,pay):
+            if my < p :
+                return False
+        return True
 
     def show_my_wallet(self):
         print("Now, your wallet has ...")
