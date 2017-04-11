@@ -1,14 +1,9 @@
 from Wallet import Wallet,coins
-
-# 12345 -> [1,2,3,4,5]
-def breakdown(int_vec):
-    return list(map(lambda x : int(x) , str(int_vec)))
+from itertools import product
+import sys
 
 def list_set(coin_list):
-    temp = {}
-    for many, coin in zip(coin_list,coins):
-        temp[coin] = many
-    return temp
+    return {coin : many for many, coin in zip(coin_list,coins)}
 
 def set_list(coin_set):
     return coin_set.values
@@ -25,6 +20,12 @@ def get_change(pay):
     ans.reverse()
     return ans
 
+def list_price(coin_list):
+    ans = 0
+    for index,coin in enumerate(coins):
+        ans += coin_list[index]*coin
+    return ans
+
 # show coin_list as 1yen : xx, 5yen : xx,...
 def show_coin_list(coin_list):
     for index,coin in enumerate(coins):
@@ -32,28 +33,23 @@ def show_coin_list(coin_list):
         print("yen: " , end="")
         print(coin_list[index])
 
-# NOT YET
-def Duty_algorithm(init,price):
+def Brute_algorithm(init,price):
     # ans is a coin_set
-    ans = {}
-    for coin in coins:
-        ans[coin] = 0
+    min_ans = sys.maxsize
+    all_coin_lists = [list(range(x+1)) for x in init]
 
-    count = 0
-    my_wallet = Wallet(init)
-    # breakdown price
-    price = breakdown(price)
+    for coin_list in product(*all_coin_lists):
+        this_price = list_price(coin_list)
+        if this_price >= price:
+            # print(coin_list,this_price)
+            temp = sum(get_change(this_price-price)) + sum(coin_list)
+            if min_ans >= temp:
+                min_pattern = coin_list[:]
+                min_ans = temp
+                # which means pay 1 and return 1 or return 0
+                if min_ans < 3:
+                    return min_pattern
+    return min_pattern
 
-    for index,p in enumerate(price):
-        if p > 9:
-            price[index+1] += 1
-            continue
-        elif p == 0 :
-            continue
-        else :
-            if p < 5 :
-                pay5()
-                pay10()
-                payP()
-
-print(get_change(123))
+test_case = [9,9,9,9,9,9,0,0,0]
+print(Duty_algorithm(test_case,499))
