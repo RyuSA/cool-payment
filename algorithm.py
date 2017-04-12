@@ -33,23 +33,30 @@ def show_coin_list(coin_list):
         print("yen: " , end="")
         print(coin_list[index])
 
-def Brute_algorithm(init,price):
+def Brute_algorithm(coin_list,price):
+    """
+    Input : coin_list = [1-yen, 5-yen,...10k-yen]
+    price : price (integer)
+
+    Example :
+    coin_list = [2,1,5,0,4,1,2,0,0] -> 2957 yen
+    price = 499
+    """
     # ans is a coin_set
     min_ans = sys.maxsize
-    all_coin_lists = [list(range(x+1)) for x in init]
+    all_coin_lists = [list(range(x+1)) for x in coin_list]
 
     for coin_list in product(*all_coin_lists):
         this_price = list_price(coin_list)
         if this_price >= price:
-            # print(coin_list,this_price)
             temp = sum(get_change(this_price-price)) + sum(coin_list)
             if min_ans >= temp:
                 min_pattern = coin_list[:]
                 min_ans = temp
                 # which means pay 1 and return 1 or return 0
-                if min_ans < 3:
-                    return min_pattern
+                # if min_ans < 3:
+                #     return min_pattern
     return min_pattern
 
-test_case = [9,9,9,9,9,9,0,0,0]
-print(Duty_algorithm(test_case,499))
+test_case = [9,9,9,9,9,9,9,9,9]
+print(list_price(Brute_algorithm(test_case,647)))
