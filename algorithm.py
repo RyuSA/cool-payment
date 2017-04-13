@@ -1,6 +1,8 @@
 from Wallet import Wallet,coins
 from itertools import product
+from pulp import *
 import sys
+from time import time
 
 def list_set(coin_list):
     return {coin : many for many, coin in zip(coin_list,coins)}
@@ -53,10 +55,38 @@ def Brute_algorithm(coin_list,price):
             if min_ans >= temp:
                 min_pattern = coin_list[:]
                 min_ans = temp
-                # which means pay 1 and return 1 or return 0
-                # if min_ans < 3:
-                #     return min_pattern
     return min_pattern
 
-test_case = [9,9,9,9,9,9,9,9,9]
-print(list_price(Brute_algorithm(test_case,647)))
+def Lp_solver(coin_list,price):
+    if len(coin_list) != len(coins):
+        print(coin_list,end="")
+        print(" is illigal")
+        return -1
+
+    problem = LpProblem(sense=LpMinimize)
+    pay = [LpVariable("PAY" + str(i),lowBound=0,cat=LpInteger) for i in range(len(coin_list))]
+    change = [LpVariable("CHANGE" + str(i),lowBound=0,cat=LpInteger) for i in range(len(coin_list))]
+    problem += lpSum(pay)+lpSum(change)
+    problem += lpDot(pay,coins) - lpDot(change,coins) == price
+    for coin,var in zip(coin_list,pay):
+        problem += var <= coin
+    if(problem.solve() == 1):
+        return [int(value.value()) for value in pay]
+    else :
+        print("calc failed")
+        return 0
+
+test_case = [9,9,9,9,9,0,0,0,0]
+price = 647
+
+now = time()
+for count in range(10):
+    Lp_solver(test_case,price)
+result = time() - now
+print(result)
+
+now = time()
+for count in range(10):
+    Brute_algorithm(test_case,price)
+result = time() - now
+print(result)
